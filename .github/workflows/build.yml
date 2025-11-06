@@ -1,0 +1,33 @@
+name: Build 3DS Homebrew
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install devkitPro
+      run: |
+        wget https://github.com/devkitPro/installer/releases/download/v3.0.2/devkitpro-pacman-install.sh
+        chmod +x devkitpro-pacman-install.sh
+        ./devkitpro-pacman-install.sh
+        source /opt/devkitpro/devkitpro-pacman.sh
+        sudo apt update
+        sudo apt install build-essential git wget libssl-dev -y
+        pacman -S 3ds-dev --noconfirm
+    
+    - name: Build project
+      run: |
+        source /opt/devkitpro/devkitpro-pacman.sh
+        export DEVKITPRO=/opt/devkitpro
+        export DEVKITARM=/opt/devkitpro/devkitARM
+        export PATH=$DEVKITARM/bin:$PATH
+        make
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: mh4g_timer.3dsx
+        path: mh4g_timer.3dsx
