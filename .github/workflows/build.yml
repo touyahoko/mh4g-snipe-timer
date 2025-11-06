@@ -10,7 +10,7 @@ jobs:
     
     - name: Install devkitPro
       run: |
-        wget https://github.com/devkitPro/installer/releases/download/v3.0.2/devkitpro-pacman-install.sh
+        wget https://github.com/devkitPro/installer/releases/download/v3.0.3/devkitpro-pacman-install.sh
         chmod +x devkitpro-pacman-install.sh
         ./devkitpro-pacman-install.sh
         source /opt/devkitpro/devkitpro-pacman.sh
