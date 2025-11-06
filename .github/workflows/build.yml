@@ -5,27 +5,25 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkitarm:latest
+      options: --user root
+
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Install devkitPro
+
+    - name: Install dependencies
       run: |
-        wget https://github.com/devkitPro/installer/releases/download/v3.0.3/devkitpro-pacman-install.sh
-        chmod +x devkitpro-pacman-install.sh
-        ./devkitpro-pacman-install.sh
-        source /opt/devkitpro/devkitpro-pacman.sh
-        sudo apt update
-        sudo apt install build-essential git wget libssl-dev -y
-        pacman -S 3ds-dev --noconfirm
-    
+        pacman -Syu --noconfirm
+        pacman -S --noconfirm 3ds-dev
+
     - name: Build project
       run: |
-        source /opt/devkitpro/devkitpro-pacman.sh
         export DEVKITPRO=/opt/devkitpro
         export DEVKITARM=/opt/devkitpro/devkitARM
         export PATH=$DEVKITARM/bin:$PATH
         make
-    
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
